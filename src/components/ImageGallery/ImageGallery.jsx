@@ -1,31 +1,27 @@
-import { Component } from 'react';
 import { ImageGalleryList } from './imageGallery.styled';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import LoadMore from 'components/LoadMore/LoadMore';
 import PropTypes from 'prop-types';
 
-export default class ImageGallery extends Component {
-  render() {
-    const { photos, incrementPage, loadMoreButton, handleOpenModal } = this.props;
-    return (
-      <>
-        {photos.length > 0 && (
-          <ImageGalleryList>
-            {photos &&
-              photos.map(el => (
-                <ImageGalleryItem
-                  key={el.id}
-                  webformatURL={el.webformatURL}
-                  largeImageURL={el.largeImageURL}
-                  handleOpenModal={handleOpenModal}
-                ></ImageGalleryItem>
-              ))}
-          </ImageGalleryList>
-        )}
-        {loadMoreButton && <LoadMore incrementPage={incrementPage} />}
-      </>
-    );
-  }
+export default function ImageGallery({ photos, incrementPage, loadMoreButton, handleOpenModal }) {
+  return (
+    <>
+      {photos.length > 0 && (
+        <ImageGalleryList>
+          {photos &&
+            photos.map(el => (
+              <ImageGalleryItem
+                key={el.id}
+                webformatURL={el.webformatURL}
+                largeImageURL={el.largeImageURL}
+                handleOpenModal={handleOpenModal}
+              ></ImageGalleryItem>
+            ))}
+        </ImageGalleryList>
+      )}
+      {loadMoreButton && <LoadMore incrementPage={incrementPage} />}
+    </>
+  );
 }
 
 ImageGallery.propTypes = {

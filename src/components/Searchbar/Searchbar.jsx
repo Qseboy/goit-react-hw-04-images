@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import {
   SearchbarButton,
   SearchbarForm,
@@ -8,49 +8,41 @@ import {
 } from './searchbar.styled';
 import PropTypes from 'prop-types';
 
-export default class Searchbar extends Component {
-  state = {
-    searchValue: '',
-  };
+export default function Searchbar({ submitForm }) {
+  const [searchValue, setSearchValue] = useState('');
 
-  handleInput = event => {
-    this.setState({ searchValue: event.target.value.toLowerCase() });
-  };
-
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
 
-    if (this.state.searchValue.trim() === '') {
+    if (searchValue.trim() === '') {
       alert('Input name of pictures');
       return;
     }
 
-    this.props.submitForm(this.state.searchValue);
-    this.setState({ searchValue: '' });
+    submitForm(searchValue);
+    setSearchValue('');
   };
 
-  render() {
-    return (
-      <>
-        <SearchbarHeader>
-          <SearchbarForm onSubmit={this.handleSubmit}>
-            <SearchbarButton type="submit">
-              <SearchbarSpan>Search</SearchbarSpan>
-            </SearchbarButton>
-            <SearchbarInput
-              className="input"
-              type="text"
-              autoComplete="off"
-              autoFocus
-              placeholder="Search images and photos"
-              value={this.state.searchValue}
-              onChange={this.handleInput}
-            ></SearchbarInput>
-          </SearchbarForm>
-        </SearchbarHeader>
-      </>
-    );
-  }
+  return (
+    <>
+      <SearchbarHeader>
+        <SearchbarForm onSubmit={handleSubmit}>
+          <SearchbarButton type="submit">
+            <SearchbarSpan>Search</SearchbarSpan>
+          </SearchbarButton>
+          <SearchbarInput
+            className="input"
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+            value={searchValue}
+            onChange={event => setSearchValue(event.target.value.toLowerCase())}
+          ></SearchbarInput>
+        </SearchbarForm>
+      </SearchbarHeader>
+    </>
+  );
 }
 
 Searchbar.propTypes = {
