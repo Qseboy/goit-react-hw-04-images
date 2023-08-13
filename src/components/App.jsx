@@ -53,6 +53,7 @@ export function App() {
       .finally(() => {
         setLoader(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue, page]);
 
   // load more button
