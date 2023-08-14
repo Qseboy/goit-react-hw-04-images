@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
 import ModalPhoto from './ModalPhoto/ModalPhoto';
@@ -15,8 +15,6 @@ export function App() {
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
 
-  const isFirstFetch = useRef(true);
-
   useEffect(() => {
     if (searchValue === '') {
       return;
@@ -30,11 +28,9 @@ export function App() {
         const { totalHits, hits } = data;
         const formatData = handleApiData(hits);
 
-        if (isFirstFetch.current) {
+        if (page === 1) {
           toast.success(`Was find ${totalHits} images`);
         }
-
-        isFirstFetch.current = false;
 
         // check loadMoreButton
         setLoadMoreButton(page < Math.ceil(totalHits / 12));
@@ -70,7 +66,6 @@ export function App() {
     setSearchValue(searchValue);
     setPhotos([]);
     setPage(1);
-    isFirstFetch.current = true;
   };
 
   const handleOpenModal = largeImageURL => {
