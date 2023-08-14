@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
 import ModalPhoto from './ModalPhoto/ModalPhoto';
@@ -14,7 +14,8 @@ export function App() {
   const [loader, setLoader] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
-  const [isFirstFetch, setIsFirstFetch] = useState(true);
+
+  const isFirstFetch = useRef(true);
 
   useEffect(() => {
     if (searchValue === '') {
@@ -29,11 +30,11 @@ export function App() {
         const { totalHits, hits } = data;
         const formatData = handleApiData(hits);
 
-        if (isFirstFetch) {
+        if (isFirstFetch.current) {
           toast.success(`Was find ${totalHits} images`);
         }
 
-        setIsFirstFetch(false);
+        isFirstFetch.current = false;
 
         // check loadMoreButton
         setLoadMoreButton(page < Math.ceil(totalHits / 12));
@@ -45,7 +46,7 @@ export function App() {
         }
 
         // set photos
-        setPhotos([...photos, ...formatData]);
+        setPhotos(prevPhotos => [...prevPhotos, ...formatData]);
       })
       .catch(err => {
         alert(err);
@@ -53,7 +54,6 @@ export function App() {
       .finally(() => {
         setLoader(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue, page]);
 
   // load more button
@@ -70,7 +70,7 @@ export function App() {
     setSearchValue(searchValue);
     setPhotos([]);
     setPage(1);
-    setIsFirstFetch(true);
+    isFirstFetch.current = true;
   };
 
   const handleOpenModal = largeImageURL => {
